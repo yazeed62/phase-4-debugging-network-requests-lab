@@ -6,10 +6,16 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
   function handleDeleteClick() {
     fetch(`/toys/${id}`, {
       method: "DELETE",
-    }).then((r) => {
-      if (r.ok) {
+    })
+    .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
         onDeleteToy(toy);
-      }
+      })
+       .catch((error) => {
+        console.error("Error:", error);
     });
   }
 
@@ -25,7 +31,15 @@ function ToyCard({ toy, onDeleteToy, onUpdateToy }) {
       },
       body: JSON.stringify(updateObj),
     })
-      .then((r) => r.json())
+     .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+
+
+
       .then((updatedToy) => onUpdateToy(updatedToy));
   }
 
